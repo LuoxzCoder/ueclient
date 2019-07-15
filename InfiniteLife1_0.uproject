@@ -1,0 +1,17 @@
+{
+	"FileVersion": 3,
+	"EngineAssociation": "{B60A79AB-48B7-F72A-F569-0A8D7BB45476}",
+	"Category": "",
+	"Description": "",
+	"Modules": [
+		{
+			"Name": "InfiniteLife1_0",
+			"Type": "Runtime",
+			"LoadingPhase": "Default",
+			"AdditionalDependencies": [
+				"UMG",
+				"Engine"
+			]
+		}
+	]
+}
