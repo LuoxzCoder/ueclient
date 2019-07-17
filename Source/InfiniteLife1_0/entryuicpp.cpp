@@ -22,6 +22,7 @@ void Uentryuicpp::clientexit()
 	messagepackage.MT = MessageType::EXITGAME;
 	FJsonObjectConverter::UStructToJsonObjectString<FMessagePackage>(messagepackage, outstring);
 	Uentryuicpp::mtcp->Send(outstring);
+	//Uentryuicpp::mtcp->Send((uint8*)outstring.GetCharArray().GetData(),outstring.Len()*2);
 	UMyBlueprintFunctionLibrary::CLogtofile(FString("OnGameEndevent.Broadcast();"));
 	Uentryuicpp::mtcp->exitthread = true;
 
