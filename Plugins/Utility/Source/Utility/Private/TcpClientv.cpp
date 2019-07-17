@@ -1,6 +1,6 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
-
-
+//some string change to utf8 will enconter error
+#define UTF16
 #include "TcpClientv.h"
 #include "Runtime/Sockets/Public/SocketSubsystem.h"
 #include "Runtime/Networking/Public/Interfaces/IPv4/IPv4Address.h"
@@ -36,13 +36,21 @@ bool TcpClientv::Connecttoserver(uint8 a, uint8 b, uint8 c, uint8 d, uint32 port
 
 bool TcpClientv::Send(FString & serialized)
 {
+	bool successful = false;
+	int32 sent = 0;
+	uint8*pointer;
+#ifdef UTF16
+	int64 outsize;
+	UMyBlueprintFunctionLibrary::FStringtoUTF16(serialized, pointer, outsize);
+	successful = Socket->Send(pointer, outsize, sent);
+#else
 	TCHAR *serializedChar = serialized.GetCharArray().GetData();
 	int32 size = FCString::Strlen(serializedChar);
-	int32 sent = 0;
-	bool successful = Socket->Send((uint8*)TCHAR_TO_UTF8(serializedChar), size, sent);
+	pointer = (uint8*)TCHAR_TO_UTF8(serializedChar);
+	successful = Socket->Send(pointer, size, sent);
+#endif // SENDUTF16
 	return successful;
 }
-
 bool TcpClientv::Send(const uint8 * content, const int32 & size)
 {
 	int32 sent = 0;
@@ -97,7 +105,11 @@ void TcpClientv::ReceiveWork()
 			UMyBlueprintFunctionLibrary::CLogtofile(FString(UTF8_TO_TCHAR(&datareceive[0])).Left(datareceive.Num()));
 			Socket->Recv(&datareceive[0], datasize, bytes, ESocketReceiveFlags::None);
 			UMyBlueprintFunctionLibrary::CLogtofile(FString(UTF8_TO_TCHAR(&datareceive[0])).Left(datareceive.Num()));
-		    OnTcpClientReceiveddata.Broadcast(datareceive, FString(UTF8_TO_TCHAR(&datareceive[0])).Left(datareceive.Num()));
+#ifdef UTF16
+			OnTcpClientReceiveddata.Broadcast(datareceive, FString(datareceive.Num()>>1,(TCHAR*)&datareceive[0]));
+#else
+			OnTcpClientReceiveddata.Broadcast(datareceive, FString(UTF8_TO_TCHAR(&datareceive[0])).Left(datareceive.Num()));
+#endif // SENDUTF16
 		}
 		//else
 		//{

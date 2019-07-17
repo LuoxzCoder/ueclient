@@ -15,7 +15,6 @@ class UTILITY_API TcpClientv : public ISmartinterface
 	TArray<uint8> datareceive;
 	uint32 datasize;
 	long counter = 0;
-	
 public:
 	class FSocket* Socket;
 	TcpClientv();

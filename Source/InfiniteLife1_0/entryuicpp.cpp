@@ -83,7 +83,7 @@ void Uentryuicpp::Onpressed_mButtonItem()
 	else
 	{
 		FString outstring;
-		FMessagePackage messagepackage;
+		//FMessagePackage messagepackage;
 		messagepackage.MT = MessageType::EXITGAME;
 		FJsonObjectConverter::UStructToJsonObjectString<FMessagePackage>(messagepackage, outstring);
 		Uentryuicpp::mtcp->Send(outstring);
@@ -112,7 +112,7 @@ void Uentryuicpp::Onpressed_mButtonItem1()
 	else
 	{
 		FString outstring;
-		FMessagePackage messagepackage;
+		//FMessagePackage messagepackage;
 		messagepackage.MT = MessageType::EXITGAME;
 		FJsonObjectConverter::UStructToJsonObjectString<FMessagePackage>(messagepackage, outstring);
 		Uentryuicpp::mtcp->Send(outstring);

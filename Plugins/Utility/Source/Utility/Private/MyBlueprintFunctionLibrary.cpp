@@ -20,7 +20,7 @@ TArray<Fonge> UMyBlueprintFunctionLibrary::OnGameexit;
 void UMyBlueprintFunctionLibrary::FStringtoUTF8(FString & in, uint8 *& out, int32& outsize)
 {
 	TCHAR *arr = in.GetCharArray().GetData();
-	out = (uint8*)TCHAR_TO_UTF8(arr);///this macro ofen do not work
+	out = (uint8*)TCHAR_TO_UTF8(arr);///this macro ofen do not work , "you'd better use this macro directly"
 	outsize = FCString::Strlen(arr);
 }
 FString UMyBlueprintFunctionLibrary::UTF8toFString(const TArray<uint8>& in)
@@ -35,7 +35,7 @@ void UMyBlueprintFunctionLibrary::FStringtoUTF16(FString & in, uint8 *& out, int
 }
 FString UMyBlueprintFunctionLibrary::UTF16toFString(const TArray<uint8>& in, int64 size)
 {
-	return FString(size>>1, (wchar_t*)&in[0]);
+	return FString(size>>1, (TCHAR*)&in[0]);
 	//return FString((wchar_t*)&in[0]);
 }
 void UMyBlueprintFunctionLibrary::readstringfromfile(FString filepath, FString & content)

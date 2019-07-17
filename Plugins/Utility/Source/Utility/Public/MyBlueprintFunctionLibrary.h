@@ -19,6 +19,7 @@ class UTILITY_API UMyBlueprintFunctionLibrary : public UBlueprintFunctionLibrary
 	static TArray<FString> MountedPakList;
 public:
 	///UTF8 is not stable often not work ,so jus use utf16
+	//!!!!!!!!!!!FStringtoUTF8 this blueprint function ofent enconter some strange thing
 	static void FStringtoUTF8(FString &in, uint8* &out, int32& outsize);
 	static FString UTF8toFString(const TArray<uint8>&in);
 	static void FStringtoUTF16(FString &in, uint8* &out, int64& outsize);
