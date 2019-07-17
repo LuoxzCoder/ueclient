@@ -18,6 +18,11 @@ class UTILITY_API UMyBlueprintFunctionLibrary : public UBlueprintFunctionLibrary
 
 	static TArray<FString> MountedPakList;
 public:
+	///UTF8 is not stable often not work ,so jus use utf16
+	static void FStringtoUTF8(FString &in, uint8* &out, int32& outsize);
+	static FString UTF8toFString(const TArray<uint8>&in);
+	static void FStringtoUTF16(FString &in, uint8* &out, int64& outsize);
+	static FString UTF16toFString(const TArray<uint8>&in, int64 size);
 	UFUNCTION(BlueprintCallable, Category = "Mybp")
 	static void readstringfromfile(FString filepath, FString & content);
 	UFUNCTION(BlueprintCallable, Category = "Mybp")
@@ -26,6 +31,7 @@ public:
 	static bool FileMd5isequalSpecificMd5(FString filepath, FString SpecificMd5);
 	UFUNCTION(BlueprintCallable, Category = "Mybp")
 	static void writedatatofile(FString filepath, const TArray<uint8> & content);
+	static void writedatatofile(FString &filepath,  uint8*& ByteBuffer,  int64& size);
 	UFUNCTION(BlueprintCallable, Category = "Mybp")
 	static bool Mount(FString PakFileName);
 	UFUNCTION(BlueprintCallable, Category = "Mybp")

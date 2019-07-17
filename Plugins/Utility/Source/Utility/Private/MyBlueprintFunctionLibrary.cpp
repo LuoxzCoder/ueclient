@@ -17,6 +17,27 @@
 TArray<FString> UMyBlueprintFunctionLibrary::MountedPakList;
 TArray<Fonge> UMyBlueprintFunctionLibrary::OnGameInitevent;
 TArray<Fonge> UMyBlueprintFunctionLibrary::OnGameexit;
+void UMyBlueprintFunctionLibrary::FStringtoUTF8(FString & in, uint8 *& out, int32& outsize)
+{
+	TCHAR *arr = in.GetCharArray().GetData();
+	out = (uint8*)TCHAR_TO_UTF8(arr);///this macro ofen do not work
+	outsize = FCString::Strlen(arr);
+}
+FString UMyBlueprintFunctionLibrary::UTF8toFString(const TArray<uint8>& in)
+{
+	return FString(UTF8_TO_TCHAR(&in[0])).Left(in.Num());
+}
+void UMyBlueprintFunctionLibrary::FStringtoUTF16(FString & in, uint8 *& out, int64 & outsize)
+{
+	TCHAR *arr = in.GetCharArray().GetData();
+	outsize = in.Len()<<1;
+	out = (uint8 *)arr;
+}
+FString UMyBlueprintFunctionLibrary::UTF16toFString(const TArray<uint8>& in, int64 size)
+{
+	return FString(size>>1, (wchar_t*)&in[0]);
+	//return FString((wchar_t*)&in[0]);
+}
 void UMyBlueprintFunctionLibrary::readstringfromfile(FString filepath, FString & content)
 {
 	FFileHelper::LoadFileToString(content,*filepath);
@@ -53,6 +74,22 @@ void UMyBlueprintFunctionLibrary::writedatatofile(FString filepath, const TArray
 		// Write the bytes to the file
 		FileHandle->Write(ByteBuffer, content.Num());
 
+		// Close the file again
+		delete FileHandle;
+	}
+}
+void UMyBlueprintFunctionLibrary::writedatatofile(FString &filepath,  uint8*& ByteBuffer,  int64& size)
+{
+	IPlatformFile& PlatformFile = FPlatformFileManager::Get().GetPlatformFile();
+	//PlatformFile.CreateDirectory(*filepath);
+	FString FileContent = TEXT("This is a line of text to put in the file.\n");
+	FFileHelper::SaveStringToFile(FileContent, *filepath, FFileHelper::EEncodingOptions::AutoDetect, &IFileManager::Get(), EFileWrite::FILEWRITE_Append);
+
+	IFileHandle* FileHandle = PlatformFile.OpenWrite(*filepath);
+	if (FileHandle)
+	{
+		// Write the bytes to the file
+		FileHandle->Write(ByteBuffer, size);
 		// Close the file again
 		delete FileHandle;
 	}
@@ -178,7 +215,6 @@ void UMyBlueprintFunctionLibrary::RawImageToTexture2D(const TArray<uint8> &RawFi
 }
 void UMyBlueprintFunctionLibrary::CLogtofile(FString msg)
 {
-
 	FFileHelper::SaveStringToFile(msg+"  :"+FDateTime::UtcNow().ToString()+"\n", *FPaths::ProjectSavedDir().Append("Log.log"), FFileHelper::EEncodingOptions::AutoDetect, &IFileManager::Get(), EFileWrite::FILEWRITE_Append);
 }
 UObject* UMyBlueprintFunctionLibrary::Loadobject(FString path)
@@ -186,7 +222,6 @@ UObject* UMyBlueprintFunctionLibrary::Loadobject(FString path)
 	UObject * obj = LoadObject<UObject>(nullptr, *path);
 	return obj;
 }
-
 void UMyBlueprintFunctionLibrary::Ongameinitfunc()
 {
 	//clear log file content
