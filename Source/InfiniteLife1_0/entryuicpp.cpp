@@ -17,6 +17,7 @@ Uentryuicpp::Uentryuicpp(const FObjectInitializer & ObjectInitializer) : Super(O
 }
 void Uentryuicpp::clientexit()
 {
+
 	FString outstring;
 	FMessagePackage messagepackage;
 	messagepackage.MT = MessageType::EXITGAME;
@@ -45,6 +46,10 @@ void Uentryuicpp::NativePreConstruct()
 }
 void Uentryuicpp::NativeConstruct()
 {
+	FString teststr = "hithisastring";
+	FString t1 = teststr.RightChop(10);
+	FString t2 = teststr.RightChop(13);
+	FString t3 = teststr.RightChop(15);
 	if (mtcp == nullptr)
 	{
 		mtcp = new TcpClientv();
@@ -52,6 +57,44 @@ void Uentryuicpp::NativeConstruct()
 		UMyBlueprintFunctionLibrary::AddfunctiontoOnGameexitArray(&Uentryuicpp::clientexit);
 		UMyBlueprintFunctionLibrary::AddfunctiontoOnGameexitArray(&Uentryuicpp::clientexit1);
 	}
+	//FString outstring;
+	//connected = mtcp->Connecttoserver(192, 168, 1, 240, 8001);
+	//mtcp->OnTcpClientReceiveddata.AddDynamic(this, &Uentryuicpp::OnTcpResponse);
+
+	//messagepackage.MT = MessageType::FILE;
+	//FJsonObjectConverter::UStructToJsonObjectString<FMessagePackage>(messagepackage, outstring);
+	//Uentryuicpp::mtcp->Send(outstring);
+	//FPlatformProcess::Sleep(0.05);
+	//FString strpersistent;
+	//FString str= strpersistent = UArchiveToolFunctionLibrary::ArchiveActorTransformbyTag(this, nullptr, "archive");
+	//do {
+	//	FString file_str = str.Len() > 32768 ? str.Left(32768) : str;//string should be encode by unicode
+	//	Uentryuicpp::mtcp->Send(file_str);
+	//	str = str.RightChop(32768);
+	//	while (!isfilegoing)
+	//	{
+	//		FPlatformProcess::Sleep(0.01);
+	//	}
+	//	isfilegoing = false;
+	//} while (!str.IsEmpty());
+	//messagepackage.MT = MessageType::FILEEND;
+	//FJsonObjectConverter::UStructToJsonObjectString<FMessagePackage>(messagepackage, outstring);
+	//Uentryuicpp::mtcp->Send(outstring);
+
+
+	//uint8*outarray;
+	//TArray<uint8> uarray;
+	//int64 size;
+	//UMyBlueprintFunctionLibrary::FStringtoUTF16(strpersistent, outarray, size);
+
+	//FString path = "e://write.log";
+	//UMyBlueprintFunctionLibrary::writedatatofile(path, outarray, size);
+
+	//UMyBlueprintFunctionLibrary::readdatafromfile(path, uarray);
+
+	//st = UMyBlueprintFunctionLibrary::UTF16toFString(uarray, uarray.Num());
+	//FJsonObjectConverter::JsonObjectStringToUStruct<FArchiveList>(st, &archivelist, 0, 0);
+	//FString n = archivelist.name;
 
 	//http->OnHttpResponseComplete.AddDynamic(this, &Uentryuicpp::OnHttpResponse_completed);
 	//http->HttpGet("http://192.168.1.240/file/file.rar");
@@ -140,6 +183,10 @@ void Uentryuicpp::OnTcpResponse(const TArray<uint8>&p, const FString & str)
 		pld.Append(param);
 		UGameplayStatics::OpenLevel(GetWorld(),*pld);
 		//UGameplayStatics::OpenLevel(GetWorld(), "192.168.1.240:7788");
+	}
+	if (mp.MT == MessageType::FILE)
+	{
+		isfilegoing = true;
 	}
 	//Uentryuicpp::mtcp = nullptr;
 	//FString outstring;

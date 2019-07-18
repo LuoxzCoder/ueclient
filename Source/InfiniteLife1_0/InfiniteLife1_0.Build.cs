@@ -16,7 +16,7 @@ public class InfiniteLife1_0 : ModuleRules
             "Utility",
             "Json",
             "JsonUtilities",
-
+            "ArchiveTool",
         });
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });

@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "UMG.h"
 #include "Blueprint/UserWidget.h"
+#include "ArchiveToolFunctionLibrary.h"
 #include "entryuicpp.generated.h"
 UENUM(BlueprintType)		//"BlueprintType" is essential to include
 enum class MessageType : uint8
@@ -16,6 +17,8 @@ enum class MessageType : uint8
 	EntryMAP,
 	EntryMAPOK,
 	EXITGAME,
+	FILE,
+	FILEEND,
 };
 USTRUCT()
 struct FMessagePackage {
@@ -26,7 +29,8 @@ struct FMessagePackage {
 		FString PayLoad;
 		FMessagePackage() 
 		{
-
+			MT = MessageType::LOGIN;
+			PayLoad = "";
 	    }
 		FMessagePackage(MessageType mMT, FString mPayLoad)
 		{
@@ -41,6 +45,9 @@ UCLASS()
 class INFINITELIFE1_0_API Uentryuicpp : public UUserWidget
 {
 	GENERATED_BODY()
+	bool isfilegoing=false;
+	FString st;
+	FArchiveList archivelist;
 	UPROPERTY()
 	TArray<UObject*> ObjectsArray;
 	static bool connected;
