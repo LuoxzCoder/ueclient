@@ -106,9 +106,15 @@ void TcpClientv::ReceiveWork()
 			Socket->Recv(&datareceive[0], datasize, bytes, ESocketReceiveFlags::None);
 			UMyBlueprintFunctionLibrary::CLogtofile(FString(UTF8_TO_TCHAR(&datareceive[0])).Left(datareceive.Num()));
 #ifdef UTF16
-			OnTcpClientReceiveddata.Broadcast(datareceive, FString(datareceive.Num()>>1,(TCHAR*)&datareceive[0]));
+			FString datatostring = FString(datareceive.Num() >> 1, (TCHAR*)&datareceive[0]);
+			//OnTcpClientReceiveddata.Broadcast(datareceive, FString(datareceive.Num() >> 1, (TCHAR*)&datareceive[0]));
+			OnTcpClientReceiveddata.Broadcast(datareceive, datatostring);
+			OnTcpClientReceiveddatav1.ExecuteIfBound(datareceive, datatostring);
 #else
-			OnTcpClientReceiveddata.Broadcast(datareceive, FString(UTF8_TO_TCHAR(&datareceive[0])).Left(datareceive.Num()));
+			FString datatostring = FString(UTF8_TO_TCHAR(&datareceive[0])).Left(datareceive.Num());
+			//OnTcpClientReceiveddata.Broadcast(datareceive, FString(UTF8_TO_TCHAR(&datareceive[0])).Left(datareceive.Num()));
+			OnTcpClientReceiveddata.Broadcast(datareceive,datatostring);
+			OnTcpClientReceiveddatav1.ExecuteIfBound(datareceive,datatostring);
 #endif // SENDUTF16
 		}
 		//else

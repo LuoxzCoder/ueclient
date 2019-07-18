@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "TcpClient.h"
 #include "Smartinterface.h"
+DECLARE_DELEGATE_TwoParams(FOnTcpClientReceivedatav1, const TArray<uint8>&, const FString &);
+
 /**
  * 
  */
@@ -26,4 +28,5 @@ public:
 	bool Send(const uint8*content, const int32& size);
 	void ReceiveWork();
 	FOnTcpClientvReceiveddata OnTcpClientReceiveddata;
+	FOnTcpClientReceivedatav1 OnTcpClientReceiveddatav1;
 };

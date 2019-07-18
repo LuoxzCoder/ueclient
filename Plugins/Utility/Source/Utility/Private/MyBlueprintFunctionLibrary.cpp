@@ -17,6 +17,7 @@
 TArray<FString> UMyBlueprintFunctionLibrary::MountedPakList;
 TArray<Fonge> UMyBlueprintFunctionLibrary::OnGameInitevent;
 TArray<Fonge> UMyBlueprintFunctionLibrary::OnGameexit;
+TArray<Fang> UMyBlueprintFunctionLibrary::OnGameexiteventwithparameter;
 void UMyBlueprintFunctionLibrary::FStringtoUTF8(FString & in, uint8 *& out, int32& outsize)
 {
 	TCHAR *arr = in.GetCharArray().GetData();
@@ -230,6 +231,7 @@ void UMyBlueprintFunctionLibrary::Ongameinitfunc()
 	{
 		var.ExecuteIfBound();
 	}
+
 }
 
 void UMyBlueprintFunctionLibrary::OnGameEndefunc()
@@ -237,6 +239,10 @@ void UMyBlueprintFunctionLibrary::OnGameEndefunc()
 	for (auto var : OnGameexit)
 	{
 		var.ExecuteIfBound();
+	}
+	for (auto var : OnGameexiteventwithparameter)
+	{
+		var.ExecuteIfBound(TArray<uint8>(), FString("hi param"));
 	}
 }
 
@@ -253,5 +259,10 @@ void UMyBlueprintFunctionLibrary::AddfunctiontoOnGameexitArray(TBaseStaticDelega
 	temp.BindStatic(InFuncPtr);
 	OnGameexit.Add(temp);
 }
-
+void UMyBlueprintFunctionLibrary::AddfunctiontoOnGameIniteventwithparameterArray(TBaseStaticDelegateInstance<TTypeWrapper<void>(const TArray<uint8>&, const FString &)>::FFuncPtr InFuncPtr)
+{
+	Fang temp;
+	temp.BindStatic(InFuncPtr);
+	OnGameexiteventwithparameter.Add(temp);
+}
 

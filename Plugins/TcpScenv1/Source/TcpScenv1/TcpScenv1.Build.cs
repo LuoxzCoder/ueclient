@@ -1,4 +1,4 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+﻿// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
 
 using UnrealBuildTool;
 
@@ -38,6 +38,9 @@ public class TcpScenv1 : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
+                "Utility",
+                "Json",
+                "JsonUtilities",
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);

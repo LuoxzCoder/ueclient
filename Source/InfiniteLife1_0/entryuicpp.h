@@ -58,6 +58,7 @@ public:
 	static FString LevelShouldBeLoaded;
 	static void clientexit();
 	static void clientexit1();
+	static void clientexitv1(const TArray<uint8>&,const FString&);
 public:
 	virtual void NativePreConstruct()override;
 	virtual void NativeConstruct() override;

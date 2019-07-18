@@ -33,6 +33,12 @@ void Uentryuicpp::clientexit1()
 	UMyBlueprintFunctionLibrary::CLogtofile(FString("Uentryuicpp::clientexit1()"));
 
 }
+void Uentryuicpp::clientexitv1(const TArray<uint8>& arr, const FString& str)
+{
+	
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, *str);
+
+}
 void Uentryuicpp::NativePreConstruct()
 {
 	if (mButtonItem)
@@ -55,7 +61,8 @@ void Uentryuicpp::NativeConstruct()
 		mtcp = new TcpClientv();
 
 		UMyBlueprintFunctionLibrary::AddfunctiontoOnGameexitArray(&Uentryuicpp::clientexit);
-		UMyBlueprintFunctionLibrary::AddfunctiontoOnGameexitArray(&Uentryuicpp::clientexit1);
+		UMyBlueprintFunctionLibrary::AddfunctiontoOnGameIniteventwithparameterArray(&Uentryuicpp::clientexitv1);
+		//UMyBlueprintFunctionLibrary::AddfunctiontoOnGameexitArray(&Uentryuicpp::clientexit1);
 	}
 	//FString outstring;
 	//connected = mtcp->Connecttoserver(192, 168, 1, 240, 8001);

@@ -8,6 +8,7 @@
 #include "Runtime/CoreUObject/Public/UObject/Object.h"
 #include "MyBlueprintFunctionLibrary.generated.h"
 DECLARE_DELEGATE(Fonge);
+DECLARE_DELEGATE_TwoParams(Fang, const TArray<uint8>&, const FString &);
 /**
  * 
  */
@@ -49,6 +50,8 @@ public:
 	static void OnGameEndefunc();
 	static TArray<Fonge> OnGameexit;
 	static TArray<Fonge> OnGameInitevent;
+	static TArray<Fang> OnGameexiteventwithparameter;
 	static void AddfunctiontoOnGameIniteventArray(TBaseStaticDelegateInstance<TTypeWrapper<void>()>::FFuncPtr InFuncPtr);
 	static void AddfunctiontoOnGameexitArray(TBaseStaticDelegateInstance<TTypeWrapper<void>()>::FFuncPtr InFuncPtr);
+	static void AddfunctiontoOnGameIniteventwithparameterArray(TBaseStaticDelegateInstance<TTypeWrapper<void>(const TArray<uint8>&, const FString &)>::FFuncPtr InFuncPtr);
 };
