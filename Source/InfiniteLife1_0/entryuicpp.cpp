@@ -113,7 +113,7 @@ void Uentryuicpp::OnHttpResponse_completed(const FString& Responsestring, const 
 }
 void Uentryuicpp::NativeTick(const FGeometry & MyGeometry, float InDeltaTime)
 {
-
+	
 }
 
 void Uentryuicpp::Onpressed_mButtonItem()

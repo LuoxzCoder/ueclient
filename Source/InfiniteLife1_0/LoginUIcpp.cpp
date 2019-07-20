@@ -4,6 +4,7 @@
 #include "LoginUIcpp.h"
 #include "TcpClientv.h"
 #include "JsonUtilities.h"
+#include "Runtime/Engine/Public/TimerManager.h"
 #include "Json.h"
 #include "MyBlueprintFunctionLibrary.h"
 class TcpClientv* ULoginUIcpp::mtcp = nullptr;
@@ -43,6 +44,8 @@ void ULoginUIcpp::NativeConstruct()
 		}
 		UMyBlueprintFunctionLibrary::AddfunctiontoOnGameexitArray(&ULoginUIcpp::clientexit);
 	}
+	GetWorld()->GetTimerManager().SetTimer(th, this, &ULoginUIcpp::thwork, 0.5, true, 1);
+
 }
 void ULoginUIcpp::Onpressed_mButtonItemSingUp()
 {
@@ -73,6 +76,8 @@ void ULoginUIcpp::Onpressed_mButtonItemLogin()
 	messagepackage.PayLoad = username + "?" + password;
 	FJsonObjectConverter::UStructToJsonObjectString<FMessagePackage>(messagepackage, outstring);
 	ULoginUIcpp::mtcp->Send(outstring);
+	//UGameplayStatics::OpenLevel(GetWorld(), "FirstPersonExampleMap");
+
 }
 void ULoginUIcpp::OnTcpResponse(const TArray<uint8>&p, const FString & str)
 {
@@ -99,7 +104,13 @@ void ULoginUIcpp::OnTcpResponse(const TArray<uint8>&p, const FString & str)
 		if (pld.Equals("succeed"))
 		{
 			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, TEXT("login succeed"));
-
+			OnTcpResponsestate = 1;
+			//WidgetBlueprint'/Game/FirstPersonBP/Maps/entryui.entryui'
+			//UClass* uwp = (UClass*)LoadClass<UObject>(NULL, TEXT("WidgetBlueprint'/Game/FirstPersonBP/Maps/entryui.entryui_C'"));
+		   // UUserWidget *widget = CreateWidget<UUserWidget>(GetWorld(), uwp);
+			//widget->AddToViewport();		
+			//World'/Game/FirstPersonBP/Maps/FirstPersonExampleMap.FirstPersonExampleMap'
+			//UGameplayStatics::OpenLevel(GetWorld(), "/Game/FirstPersonBP/Maps/FirstPersonExampleMap");
 		}
 		else
 		{
@@ -113,4 +124,17 @@ void ULoginUIcpp::OnTcpResponse(const TArray<uint8>&p, const FString & str)
 	//messagepackage.MT = MessageType::EntryMAPOK;
 	//FJsonObjectConverter::UStructToJsonObjectString<FMessagePackage>(messagepackage, outstring);
 	//mtcp->Send(outstring);
+}
+void ULoginUIcpp::thwork()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, TEXT("thwork"));
+	if (OnTcpResponsestate == 1)
+	{
+		UClass* uwp = (UClass*)LoadClass<UObject>(NULL, TEXT("WidgetBlueprint'/Game/FirstPersonBP/Maps/entryui.entryui_C'"));
+		UUserWidget *widget = CreateWidget<UUserWidget>(GetWorld(), uwp);
+		widget->AddToViewport();	
+		this->RemoveFromParent();
+		OnTcpResponsestate = 0;
+	}
+
 }

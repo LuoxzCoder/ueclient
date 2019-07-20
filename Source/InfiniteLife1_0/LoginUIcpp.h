@@ -14,7 +14,11 @@ UCLASS()
 class INFINITELIFE1_0_API ULoginUIcpp : public UUserWidget
 {
 	GENERATED_BODY()
-		bool isconnected = false;
+	FTimerHandle th;
+	int OnTcpResponsestate = 0;
+
+	void thwork();
+	bool isconnected = false;
 public:
 	virtual void NativePreConstruct()override;
 	virtual void NativeConstruct() override;
@@ -37,5 +41,5 @@ private:
 	UFUNCTION()
 		void Onpressed_mButtonItemLogin();
 	UFUNCTION()
-		void OnTcpResponse(const TArray<uint8>&p, const FString & str);
+	 void OnTcpResponse(const TArray<uint8>&p, const FString & str);
 };
