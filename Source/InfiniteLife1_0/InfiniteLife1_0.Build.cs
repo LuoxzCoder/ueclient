@@ -17,6 +17,7 @@ public class InfiniteLife1_0 : ModuleRules
             "Json",
             "JsonUtilities",
             "ArchiveTool",
+            "TcpScenv1",
         });
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
