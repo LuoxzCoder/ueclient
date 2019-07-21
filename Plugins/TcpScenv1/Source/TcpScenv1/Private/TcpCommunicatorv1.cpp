@@ -67,6 +67,39 @@ void UTcpCommunicatorv1::LogIn(FString username, FString password)
 	FJsonObjectConverter::UStructToJsonObjectString<FMessagePackage>(messagepackage, outstring);
 	mtcp->Send(outstring);
 }
+void UTcpCommunicatorv1::Sendfile(FString &str)
+{
+	FString outstring;
+	FMessagePackage messagepackage;
+	messagepackage.MT = MessageType::FILE;
+	FJsonObjectConverter::UStructToJsonObjectString<FMessagePackage>(messagepackage, outstring);
+	mtcp->Send(outstring);
+	FPlatformProcess::Sleep(0.05);
+	FString strpersistent;
+	do {
+		FString file_str = str.Len() > 32768 ? str.Left(32768) : str;//string should be encode by unicode
+		mtcp->Send(file_str);
+		str = str.RightChop(32768);
+		while (!isfilegoing)
+		{
+			FPlatformProcess::Sleep(0.01);
+		}
+		isfilegoing = false;
+	} while (!str.IsEmpty());
+	messagepackage.MT = MessageType::FILEEND;
+	FJsonObjectConverter::UStructToJsonObjectString<FMessagePackage>(messagepackage, outstring);
+	mtcp->Send(outstring);
+}
+void UTcpCommunicatorv1::SendMapActorInforfile(FString &str)
+{
+	Sendfile(str);
+	FPlatformProcess::Sleep(0.05);
+	FString outstring;
+	FMessagePackage messagepackage;
+	messagepackage.MT = MessageType::SAVEMAPACTORINFOR;
+	FJsonObjectConverter::UStructToJsonObjectString<FMessagePackage>(messagepackage, outstring);
+	mtcp->Send(outstring);
+}
 void UTcpCommunicatorv1::OnTcpResponse(const TArray<uint8>& p, const FString & str)
 {
 	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, *str);
@@ -93,12 +126,6 @@ void UTcpCommunicatorv1::OnTcpResponse(const TArray<uint8>& p, const FString & s
 		{
 			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, TEXT("login succeed"));
 			OnTcpResponsestate = 1;
-			//WidgetBlueprint'/Game/FirstPersonBP/Maps/entryui.entryui'
-			//UClass* uwp = (UClass*)LoadClass<UObject>(NULL, TEXT("WidgetBlueprint'/Game/FirstPersonBP/Maps/entryui.entryui_C'"));
-		   // UUserWidget *widget = CreateWidget<UUserWidget>(GetWorld(), uwp);
-			//widget->AddToViewport();		
-			//World'/Game/FirstPersonBP/Maps/FirstPersonExampleMap.FirstPersonExampleMap'
-			//UGameplayStatics::OpenLevel(GetWorld(), "/Game/FirstPersonBP/Maps/FirstPersonExampleMap");
 		}
 		else
 		{
@@ -106,6 +133,10 @@ void UTcpCommunicatorv1::OnTcpResponse(const TArray<uint8>& p, const FString & s
 
 		}
 
+	}
+	if (mp.MT == MessageType::FILE)
+	{
+		isfilegoing = true;
 	}
 }
 void UTcpCommunicatorv1::thwork()
@@ -117,10 +148,6 @@ void UTcpCommunicatorv1::thwork()
 		{
 			OnLogInSucceed.Broadcast();
 		}
-		//UClass* uwp = (UClass*)LoadClass<UObject>(NULL, TEXT("WidgetBlueprint'/Game/FirstPersonBP/Maps/entryui.entryui_C'"));
-		//UUserWidget *widget = CreateWidget<UUserWidget>(GetWorld(), uwp);
-		//widget->AddToViewport();
-		//this->RemoveFromParent();
 		OnTcpResponsestate = 0;
 	}
 

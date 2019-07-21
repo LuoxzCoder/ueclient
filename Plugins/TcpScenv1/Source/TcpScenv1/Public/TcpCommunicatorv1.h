@@ -13,6 +13,7 @@ enum class MessageType : uint8
 	SINGUP,
 	LOGIN,
 	MATCH,
+	SAVEMAPACTORINFOR,
 	EntryMAP,
 	EntryMAPOK,
 	EXITGAME,
@@ -51,17 +52,20 @@ class TCPSCENV1_API UTcpCommunicatorv1 : public UObject
 	static void clientexit();
 	FTimerHandle th;
 	void thwork();
-
+	bool isfilegoing = false;
 	UFUNCTION()
 		void OnTcpResponse(const TArray<uint8>&p, const FString & str);
 private:
 	bool isconnected = false;
 	int OnTcpResponsestate = 0;
+	void Sendfile(FString &filecontent);
 public:
 	class UWorld* world;
 	bool ConnectServer();
 	void SignUp(FString username, FString password);
 	void LogIn(FString username, FString password);
+	void SendMapActorInforfile(FString &filecontent);
+
 	UPROPERTY()
 	FOnLogInsucceed OnLogInSucceed;
 };
