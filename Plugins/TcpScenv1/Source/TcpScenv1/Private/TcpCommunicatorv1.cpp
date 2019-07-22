@@ -89,11 +89,15 @@ void UTcpCommunicatorv1::Sendfile(FString &str)
 	messagepackage.MT = MessageType::FILEEND;
 	FJsonObjectConverter::UStructToJsonObjectString<FMessagePackage>(messagepackage, outstring);
 	mtcp->Send(outstring);
+	while (!isfilereceiveok)
+	{
+		FPlatformProcess::Sleep(0.01);
+	}
+	isfilereceiveok = false;
 }
 void UTcpCommunicatorv1::SendMapActorInforfile(FString &str)
 {
 	Sendfile(str);
-	FPlatformProcess::Sleep(0.05);
 	FString outstring;
 	FMessagePackage messagepackage;
 	messagepackage.MT = MessageType::SAVEMAPACTORINFOR;
@@ -119,7 +123,7 @@ void UTcpCommunicatorv1::OnTcpResponse(const TArray<uint8>& p, const FString & s
 
 		}
 	}
-	if (mp.MT == MessageType::LOGIN)
+	else if (mp.MT == MessageType::LOGIN)
 	{
 		FString pld = mp.PayLoad;
 		if (pld.Equals("succeed"))
@@ -134,9 +138,13 @@ void UTcpCommunicatorv1::OnTcpResponse(const TArray<uint8>& p, const FString & s
 		}
 
 	}
-	if (mp.MT == MessageType::FILE)
+	else if (mp.MT == MessageType::FILE)
 	{
 		isfilegoing = true;
+	}
+	else if (mp.MT == MessageType::FILERECEIVEOK)
+	{
+		isfilereceiveok = true;
 	}
 }
 void UTcpCommunicatorv1::thwork()

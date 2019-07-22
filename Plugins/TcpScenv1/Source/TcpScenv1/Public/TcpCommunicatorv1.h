@@ -9,7 +9,6 @@
 UENUM(BlueprintType)		//"BlueprintType" is essential to include
 enum class MessageType : uint8
 {
-	SENDEND,
 	SINGUP,
 	LOGIN,
 	MATCH,
@@ -19,6 +18,7 @@ enum class MessageType : uint8
 	EXITGAME,
 	FILE,
 	FILEEND,
+	FILERECEIVEOK,
 };
 USTRUCT()
 struct FMessagePackage {
@@ -53,6 +53,7 @@ class TCPSCENV1_API UTcpCommunicatorv1 : public UObject
 	FTimerHandle th;
 	void thwork();
 	bool isfilegoing = false;
+	bool isfilereceiveok = false;
 	UFUNCTION()
 		void OnTcpResponse(const TArray<uint8>&p, const FString & str);
 private:
