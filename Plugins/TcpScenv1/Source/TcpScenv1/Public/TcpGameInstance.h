@@ -21,4 +21,6 @@ class TCPSCENV1_API UTcpGameInstance : public UGameInstance
 public:
 	UTcpCommunicatorv1 * GetSignUpLoginClient();
 	UUTcpCommunicatorv2 * GetMatchClient();
+	FString username;
+	FString password;
 };

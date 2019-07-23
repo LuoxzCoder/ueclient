@@ -79,6 +79,8 @@ void ASLGameMode::loadandunloadstreaminglevelv1(FName levelname)
 
 void ASLGameMode::OnfileReceiveComplete(FString& file, MessageType type)
 {
+	UMyBlueprintFunctionLibrary::CLogtofile(TEXT("OnfileReceiveComplete"));
+	UMyBlueprintFunctionLibrary::CLogtofile(*file);
 
 }
 
@@ -89,8 +91,14 @@ FString ASLGameMode::InitNewPlayer(APlayerController* NewPlayerController, const
 	UMyBlueprintFunctionLibrary::CLogtofile(TEXT("ASLGameMode::InitNewPlayer"));
 	UMyBlueprintFunctionLibrary::CLogtofile(Options); 
 	UMyBlueprintFunctionLibrary::CLogtofile(restr);
+	UMyBlueprintFunctionLibrary::CLogtofile(*strarray[0]);
+	UMyBlueprintFunctionLibrary::CLogtofile(*strarray[1]);
 	loadandunloadstreaminglevel(*strarray[0]);
 ////////////////////////////////////////////////////////
+	if (tcpclient != nullptr)
+	{
+		return restr;
+	}
 	UGameInstance* gameinstance = GetWorld()->GetGameInstance();
 	if (gameinstance == nullptr)
 	{
@@ -116,6 +124,8 @@ FString ASLGameMode::InitNewPlayer(APlayerController* NewPlayerController, const
 	check(tcpclient);
 	tcpclient->OnFileReceiveSucceed.AddDynamic(this, &ASLGameMode::OnfileReceiveComplete);
 	tcpclient->ConnectServer();
+	FString params = strarray[0] + "?" + strarray[1];
+	tcpclient->GetMapActorInforfile(params);
 ///////////////////////////////////////////////
 	return restr;
 }

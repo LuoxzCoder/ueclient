@@ -130,8 +130,10 @@ void Uentryuicpp::NativeTick(const FGeometry & MyGeometry, float InDeltaTime)
 void Uentryuicpp::Onpressed_mButtonItem()
 {
 	LevelShouldBeLoaded = "/Game/FirstPersonBP/Maps/FirstPersonExampleMap";
-	matchclient->mapname = LevelShouldBeLoaded;
-	matchclient->GetMapArchiveInfor(LevelShouldBeLoaded);
+	check(matchclient);
+	matchclient->OpenServermap(LevelShouldBeLoaded);
+	//matchclient->mapname = LevelShouldBeLoaded;
+	//matchclient->GetMapArchiveInfor(LevelShouldBeLoaded);
 	//loading special effects
 
 
@@ -172,8 +174,10 @@ void Uentryuicpp::Onpressed_mButtonItem()
 void Uentryuicpp::Onpressed_mButtonItem1()
 {
 	LevelShouldBeLoaded = "/Game/ThirdPersonBP/Maps/ThirdPersonExampleMap";
-	matchclient->mapname = LevelShouldBeLoaded;
-	matchclient->GetMapArchiveInfor(LevelShouldBeLoaded);
+	check(matchclient);
+	matchclient->OpenServermap(LevelShouldBeLoaded);
+	//matchclient->mapname = LevelShouldBeLoaded;
+	//matchclient->GetMapArchiveInfor(LevelShouldBeLoaded);
 	//loading special effects
 
 

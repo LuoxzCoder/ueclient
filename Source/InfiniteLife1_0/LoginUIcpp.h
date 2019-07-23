@@ -15,6 +15,7 @@ class INFINITELIFE1_0_API ULoginUIcpp : public UUserWidget
 {
 	GENERATED_BODY()
 	class UTcpCommunicatorv1* tcpclient;
+	class UTcpGameInstance* tcpgameinstance;
 public:
 	virtual void NativePreConstruct()override;
 	virtual void NativeConstruct() override;

@@ -26,7 +26,7 @@ void UUTcpCommunicatorv2::init()
 	UMyBlueprintFunctionLibrary::AddfunctiontoOnGameexitArray(&UUTcpCommunicatorv2::clientexit);
 
 	UGameInstance* gameinstance = world->GetGameInstance();
-	UTcpGameInstance* tcpgameinstance = Cast<UTcpGameInstance>(gameinstance);
+	tcpgameinstance = Cast<UTcpGameInstance>(gameinstance);
 	check(tcpgameinstance);
 	tcpclient = tcpgameinstance->GetSignUpLoginClient();
 	check(tcpclient);
@@ -41,7 +41,7 @@ void UUTcpCommunicatorv2::OnTcpResponse(const TArray<uint8>&p, const FString & s
 	{
 		FString pld = mp.PayLoad;
 
-		FString param = FString::Printf(TEXT("?%s?%s"), *LevelShouldBeLoaded, TEXT("hiparam1"));
+		FString param = FString::Printf(TEXT("?%s?%s"), *LevelShouldBeLoaded, *tcpgameinstance->username);
 		pld.Append(param);
 		UGameplayStatics::OpenLevel(world, *pld);
 		//UGameplayStatics::OpenLevel(GetWorld(), "192.168.1.240:7788");
@@ -83,6 +83,7 @@ void UUTcpCommunicatorv2::OpenServermap(FString name)
 }
 FString UUTcpCommunicatorv2::GetMapArchiveInfor(FString name)
 {
+	check(tcpclient);
 	tcpclient->GetMapActorInforfile(name);
 	return "";
 }

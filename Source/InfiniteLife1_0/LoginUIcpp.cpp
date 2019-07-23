@@ -23,7 +23,7 @@ void ULoginUIcpp::NativePreConstruct()
 		mButtonItemLogin->OnClicked.AddDynamic(this, &ULoginUIcpp::Onpressed_mButtonItemLogin);
 	}
 	UGameInstance* gameinstance = GetWorld()->GetGameInstance();
-	UTcpGameInstance* tcpgameinstance = Cast<UTcpGameInstance>(gameinstance);
+	tcpgameinstance = Cast<UTcpGameInstance>(gameinstance);
 	check(tcpgameinstance);
 	tcpclient = tcpgameinstance->GetSignUpLoginClient();
 	check(tcpclient);
@@ -56,5 +56,7 @@ void ULoginUIcpp::Onpressed_mButtonItemLogin()
 	FString password = mpassword->GetText().ToString();
 
 	tcpclient->LogIn(username, password);
-
+	check(tcpgameinstance);
+	tcpgameinstance->username = username;
+	tcpgameinstance->password = password;
 }

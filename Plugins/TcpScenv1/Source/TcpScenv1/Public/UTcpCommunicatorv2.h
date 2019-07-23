@@ -16,7 +16,7 @@ class TCPSCENV1_API UUTcpCommunicatorv2 : public UObject
 	GENERATED_BODY()
 	UTcpCommunicatorv1 * tcpclient;
 	FString filecontent;
-	
+	class UTcpGameInstance* tcpgameinstance;
 	static class TcpClientv * mtcp;
 	static void clientexit();
 	FString LevelShouldBeLoaded; 
