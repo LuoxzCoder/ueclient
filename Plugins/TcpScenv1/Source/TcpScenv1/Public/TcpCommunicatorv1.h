@@ -9,16 +9,22 @@
 UENUM(BlueprintType)		//"BlueprintType" is essential to include
 enum class MessageType : uint8
 {
+	FILE,//changless
+	FILEEND,//changless
+	CLIENT_FILE,
+	CLIENT_FILEEND,
+	CLIENT_FILERECEIVEOK,//client side receive ok
 	SINGUP,
 	LOGIN,
 	MATCH,
 	SAVEMAPACTORINFOR,
+	GETMAPACTORINFOR,
+	MAPACTORINFORSENDOK,
 	EntryMAP,
 	EntryMAPOK,
 	EXITGAME,
-	FILE,
-	FILEEND,
-	FILERECEIVEOK,
+	FILERECEIVEOK,//server side receive ok
+
 };
 USTRUCT()
 struct FMessagePackage {
@@ -42,7 +48,7 @@ struct FMessagePackage {
  * 
  */
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnLogInsucceed);
-
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnFileReceiveSucceed,FString&,file, MessageType,type);
 UCLASS()
 class TCPSCENV1_API UTcpCommunicatorv1 : public UObject
 {
@@ -52,11 +58,13 @@ class TCPSCENV1_API UTcpCommunicatorv1 : public UObject
 	static void clientexit();
 	FTimerHandle th;
 	void thwork();
+	bool isfile = false;
 	bool isfilegoing = false;
 	bool isfilereceiveok = false;
 	UFUNCTION()
 		void OnTcpResponse(const TArray<uint8>&p, const FString & str);
 private:
+	FString filestringpayload="";
 	bool isconnected = false;
 	int OnTcpResponsestate = 0;
 	void Sendfile(FString &filecontent);
@@ -66,7 +74,10 @@ public:
 	void SignUp(FString username, FString password);
 	void LogIn(FString username, FString password);
 	void SendMapActorInforfile(FString &filecontent);
+	void GetMapActorInforfile(FString& mapname);
 
 	UPROPERTY()
 	FOnLogInsucceed OnLogInSucceed;
+	UPROPERTY()
+	FOnFileReceiveSucceed OnFileReceiveSucceed;
 };

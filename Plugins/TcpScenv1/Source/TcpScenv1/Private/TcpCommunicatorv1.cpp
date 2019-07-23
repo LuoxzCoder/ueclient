@@ -104,10 +104,52 @@ void UTcpCommunicatorv1::SendMapActorInforfile(FString &str)
 	FJsonObjectConverter::UStructToJsonObjectString<FMessagePackage>(messagepackage, outstring);
 	mtcp->Send(outstring);
 }
+
+void UTcpCommunicatorv1::GetMapActorInforfile(FString & mapname)
+{
+	FString outstring;
+	FMessagePackage messagepackage;
+	messagepackage.MT = MessageType::GETMAPACTORINFOR;
+	messagepackage.PayLoad = mapname;
+	FJsonObjectConverter::UStructToJsonObjectString<FMessagePackage>(messagepackage, outstring);
+	mtcp->Send(outstring);
+}
+
 void UTcpCommunicatorv1::OnTcpResponse(const TArray<uint8>& p, const FString & str)
 {
+	FMessagePackage mp; 
 	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, *str);
-	FMessagePackage mp;
+	int len = str.Len();
+	FString filestr = "{\"MT\":2,\"PayLoad\":null}";
+	FString filestrmobile = "{\n\t\"mT\": \"FILE";
+	FString fileendstr = "{\"MT\":3,\"PayLoad\":null}";
+	FString fileendstrmobile = "{\n\t\"mT\": \"FILEEND";
+	if (isfile)
+	{
+		FString strsend;
+		if (str.StartsWith(fileendstr) || str.StartsWith(fileendstrmobile))
+		{
+			int size = filestringpayload.Len();
+			isfile = false;
+			mp.MT = MessageType::CLIENT_FILERECEIVEOK;//receive ok           
+			FString outstring;
+			FJsonObjectConverter::UStructToJsonObjectString<FMessagePackage>(mp, outstring);
+			mtcp->Send(outstring);
+			return;
+		}
+		filestringpayload += str;
+		int size1 = filestringpayload.Len();
+		mp.MT = MessageType::CLIENT_FILE;//go on             
+		FString outstring;
+		FJsonObjectConverter::UStructToJsonObjectString<FMessagePackage>(mp, outstring);
+		mtcp->Send(outstring);
+		return;
+	}
+	if (str.StartsWith(filestr) || str.StartsWith(filestrmobile))
+	{
+		isfile = true;
+		return;
+	}
 	FJsonObjectConverter::JsonObjectStringToUStruct<FMessagePackage>(str, &mp, 0, 0);
 	if (mp.MT == MessageType::SINGUP)
 	{
@@ -138,13 +180,17 @@ void UTcpCommunicatorv1::OnTcpResponse(const TArray<uint8>& p, const FString & s
 		}
 
 	}
-	else if (mp.MT == MessageType::FILE)
+	else if (mp.MT == MessageType::FILE)//server say keep sending
 	{
 		isfilegoing = true;
 	}
-	else if (mp.MT == MessageType::FILERECEIVEOK)
+	else if (mp.MT == MessageType::FILERECEIVEOK)//server side file receive ok so go on 
 	{
 		isfilereceiveok = true;
+	}
+	else if (mp.MT == MessageType::MAPACTORINFORSENDOK)//server send this message mean this file is a mapactorinfor
+	{
+		OnTcpResponsestate = 2;
 	}
 }
 void UTcpCommunicatorv1::thwork()
@@ -155,8 +201,15 @@ void UTcpCommunicatorv1::thwork()
 		if (OnLogInSucceed.IsBound())
 		{
 			OnLogInSucceed.Broadcast();
+			OnTcpResponsestate = 0;
 		}
-		OnTcpResponsestate = 0;
 	}
-
+	else if (OnTcpResponsestate == 2)
+	{
+		if (OnFileReceiveSucceed.IsBound())
+		{
+			OnFileReceiveSucceed.Broadcast(filestringpayload, MessageType::MAPACTORINFORSENDOK);
+			OnTcpResponsestate = 0;
+		}
+	}
 }

@@ -7,6 +7,8 @@
 #include "JsonUtilities.h"
 #include "Json.h"
 #include "MyBlueprintFunctionLibrary.h"
+
+#include "TcpGameInstance.h"
 class TcpClientv* UUTcpCommunicatorv2::mtcp = nullptr;
 void UUTcpCommunicatorv2::clientexit()
 {
@@ -23,6 +25,12 @@ void UUTcpCommunicatorv2::init()
 {
 	UMyBlueprintFunctionLibrary::AddfunctiontoOnGameexitArray(&UUTcpCommunicatorv2::clientexit);
 
+	UGameInstance* gameinstance = world->GetGameInstance();
+	UTcpGameInstance* tcpgameinstance = Cast<UTcpGameInstance>(gameinstance);
+	check(tcpgameinstance);
+	tcpclient = tcpgameinstance->GetSignUpLoginClient();
+	check(tcpclient);
+	tcpclient->OnFileReceiveSucceed.AddDynamic(this, &UUTcpCommunicatorv2::onfilereceivesucceed);
 }
 void UUTcpCommunicatorv2::OnTcpResponse(const TArray<uint8>&p, const FString & str)
 {
@@ -33,13 +41,20 @@ void UUTcpCommunicatorv2::OnTcpResponse(const TArray<uint8>&p, const FString & s
 	{
 		FString pld = mp.PayLoad;
 
-		FString param = FString::Printf(TEXT("?%s?%s"), *LevelShouldBeLoaded, TEXT("hiparam2"));
+		FString param = FString::Printf(TEXT("?%s?%s"), *LevelShouldBeLoaded, TEXT("hiparam1"));
 		pld.Append(param);
 		UGameplayStatics::OpenLevel(world, *pld);
 		//UGameplayStatics::OpenLevel(GetWorld(), "192.168.1.240:7788");
 	}
 }
+void UUTcpCommunicatorv2::onfilereceivesucceed(FString &filecontent, MessageType type)
+{
+	//type :mean file type;
+	this->filecontent = filecontent;
+	OpenServermap(mapname);
+	//UMyBlueprintFunctionLibrary::CLogtofile(FString("onfilereceivesucceed();"));
 
+}
 void UUTcpCommunicatorv2::OpenServermap(FString name)
 {
 	FMessagePackage messagepackage(MessageType::MATCH, FString("hi"));
@@ -65,4 +80,9 @@ void UUTcpCommunicatorv2::OpenServermap(FString name)
 		mtcp->OnTcpClientReceiveddata.AddDynamic(this, &UUTcpCommunicatorv2::OnTcpResponse);
 		mtcp->Send(outstring);
 		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, *outstring);
+}
+FString UUTcpCommunicatorv2::GetMapArchiveInfor(FString name)
+{
+	tcpclient->GetMapActorInforfile(name);
+	return "";
 }

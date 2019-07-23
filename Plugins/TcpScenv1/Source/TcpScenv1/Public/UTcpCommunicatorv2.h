@@ -14,6 +14,9 @@ UCLASS()
 class TCPSCENV1_API UUTcpCommunicatorv2 : public UObject
 {
 	GENERATED_BODY()
+	UTcpCommunicatorv1 * tcpclient;
+	FString filecontent;
+	
 	static class TcpClientv * mtcp;
 	static void clientexit();
 	FString LevelShouldBeLoaded; 
@@ -21,7 +24,12 @@ class TCPSCENV1_API UUTcpCommunicatorv2 : public UObject
 	UFUNCTION()
 		void OnTcpResponse(const TArray<uint8>&p, const FString & str);
 public:
+	FString mapname;
 	class UWorld* world;
 	void init();
 	void OpenServermap(FString name);
+	FString GetMapArchiveInfor(FString mapname);
+private:
+	UFUNCTION()
+	void onfilereceivesucceed(FString &filecontent, MessageType type);
 };

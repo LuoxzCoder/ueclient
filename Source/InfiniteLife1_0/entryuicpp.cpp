@@ -51,15 +51,16 @@ void Uentryuicpp::NativePreConstruct()
 	{
 		mButtonItem1->OnClicked.AddDynamic(this, &Uentryuicpp::Onpressed_mButtonItem1);
 	}
+
+}
+void Uentryuicpp::NativeConstruct()
+{
 	UGameInstance* gameinstance = GetWorld()->GetGameInstance();
 	UTcpGameInstance* tcpgameinstance = Cast<UTcpGameInstance>(gameinstance);
 	check(tcpgameinstance);
 	matchclient = tcpgameinstance->GetMatchClient();
 	check(matchclient);
 	matchclient->init();
-}
-void Uentryuicpp::NativeConstruct()
-{
 	//FString teststr = "hithisastring";
 	//FString t1 = teststr.RightChop(10);
 	//FString t2 = teststr.RightChop(13);
@@ -128,9 +129,19 @@ void Uentryuicpp::NativeTick(const FGeometry & MyGeometry, float InDeltaTime)
 
 void Uentryuicpp::Onpressed_mButtonItem()
 {
-	
 	LevelShouldBeLoaded = "/Game/FirstPersonBP/Maps/FirstPersonExampleMap";
-	matchclient->OpenServermap(LevelShouldBeLoaded);
+	matchclient->mapname = LevelShouldBeLoaded;
+	matchclient->GetMapArchiveInfor(LevelShouldBeLoaded);
+	//loading special effects
+
+
+
+	//while (!matchclient->filereceiveok)
+	//{
+	//	FPlatformProcess::Sleep(0.03);
+	//}
+
+	//matchclient->OpenServermap(LevelShouldBeLoaded);
 	//FMessagePackage mp(MessageType::MATCH,FString("hi"));
 	//LevelShouldBeLoaded = "/Game/FirstPersonBP/Maps/FirstPersonExampleMap";
 	//if (!connected)
@@ -161,7 +172,11 @@ void Uentryuicpp::Onpressed_mButtonItem()
 void Uentryuicpp::Onpressed_mButtonItem1()
 {
 	LevelShouldBeLoaded = "/Game/ThirdPersonBP/Maps/ThirdPersonExampleMap";
-	matchclient->OpenServermap(LevelShouldBeLoaded);
+	matchclient->mapname = LevelShouldBeLoaded;
+	matchclient->GetMapArchiveInfor(LevelShouldBeLoaded);
+	//loading special effects
+
+
 	//FMessagePackage mp(MessageType::MATCH, FString("hi"));
 	//if (!connected)
 	//{
