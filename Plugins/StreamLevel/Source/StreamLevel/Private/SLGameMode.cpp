@@ -4,6 +4,8 @@
 #include "SLGameMode.h"
 #include "MyBlueprintFunctionLibrary.h"
 #include "Engine.h"
+
+
 void ASLGameMode::SplitString(FString str)
 {//////?xxxxx?xxxxx?xxxxx...
 	FString str1;
@@ -75,6 +77,11 @@ void ASLGameMode::loadandunloadstreaminglevelv1(FName levelname)
 	UMyBlueprintFunctionLibrary::CLogtofile(willloadlevelname.ToString().Append(" after"));
 }
 
+void ASLGameMode::OnfileReceiveComplete(FString& file, MessageType type)
+{
+
+}
+
 FString ASLGameMode::InitNewPlayer(APlayerController* NewPlayerController, const FUniqueNetIdRepl& UniqueId, const FString& Options, const FString& Portal)
 {
 	FString restr = Super::InitNewPlayer(NewPlayerController, UniqueId, Options, Portal);
@@ -83,7 +90,33 @@ FString ASLGameMode::InitNewPlayer(APlayerController* NewPlayerController, const
 	UMyBlueprintFunctionLibrary::CLogtofile(Options); 
 	UMyBlueprintFunctionLibrary::CLogtofile(restr);
 	loadandunloadstreaminglevel(*strarray[0]);
+////////////////////////////////////////////////////////
+	UGameInstance* gameinstance = GetWorld()->GetGameInstance();
+	if (gameinstance == nullptr)
+	{
+		UMyBlueprintFunctionLibrary::CLogtofile(TEXT("gameinstance is null"));
+	}
+	else
+	{
+		UMyBlueprintFunctionLibrary::CLogtofile(TEXT("gameinstance is not null"));
 
+	}
+	UTcpGameInstance* tcpgameinstance = Cast<UTcpGameInstance>(gameinstance);
+	if (tcpgameinstance == nullptr)
+	{
+		UMyBlueprintFunctionLibrary::CLogtofile(TEXT("tcpgameinstance is null"));
+	}
+	else
+	{
+		UMyBlueprintFunctionLibrary::CLogtofile(TEXT("tcpgameinstance is not null"));
+
+	}
+	check(tcpgameinstance);
+	tcpclient = tcpgameinstance->GetSignUpLoginClient();
+	check(tcpclient);
+	tcpclient->OnFileReceiveSucceed.AddDynamic(this, &ASLGameMode::OnfileReceiveComplete);
+	tcpclient->ConnectServer();
+///////////////////////////////////////////////
 	return restr;
 }
 

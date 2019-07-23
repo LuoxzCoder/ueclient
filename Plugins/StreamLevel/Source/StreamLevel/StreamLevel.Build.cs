@@ -40,6 +40,7 @@ public class StreamLevel : ModuleRules
 				"SlateCore",
                 "Utility",
                 "InputCore",
+                "TcpScenv1",
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);

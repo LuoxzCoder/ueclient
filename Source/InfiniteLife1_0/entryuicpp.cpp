@@ -51,16 +51,16 @@ void Uentryuicpp::NativePreConstruct()
 	{
 		mButtonItem1->OnClicked.AddDynamic(this, &Uentryuicpp::Onpressed_mButtonItem1);
 	}
-
-}
-void Uentryuicpp::NativeConstruct()
-{
 	UGameInstance* gameinstance = GetWorld()->GetGameInstance();
 	UTcpGameInstance* tcpgameinstance = Cast<UTcpGameInstance>(gameinstance);
 	check(tcpgameinstance);
 	matchclient = tcpgameinstance->GetMatchClient();
 	check(matchclient);
 	matchclient->init();
+}
+void Uentryuicpp::NativeConstruct()
+{
+
 	//FString teststr = "hithisastring";
 	//FString t1 = teststr.RightChop(10);
 	//FString t2 = teststr.RightChop(13);
