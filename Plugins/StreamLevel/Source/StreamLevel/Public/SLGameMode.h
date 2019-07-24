@@ -27,6 +27,10 @@ private:
 	void loadandunloadstreaminglevelv1(FName levelname);
 	UFUNCTION()
 	void OnfileReceiveComplete( FString& file, MessageType type);
+public:
+	UFUNCTION(BlueprintImplementableEvent)
+	void spawnv1(FVector position, FRotator rotator, FVector scale, UStaticMesh * meshpath);
+
 protected:
 	virtual FString InitNewPlayer(APlayerController* NewPlayerController, const FUniqueNetIdRepl& UniqueId, const FString& Options, const FString& Portal = TEXT(""))override;
 };

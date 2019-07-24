@@ -4,7 +4,9 @@
 #include "SLGameMode.h"
 #include "MyBlueprintFunctionLibrary.h"
 #include "Engine.h"
-
+#include "ArchiveToolFunctionLibrary.h"
+#include "JsonUtilities.h"
+#include "Json.h"
 
 void ASLGameMode::SplitString(FString str)
 {//////?xxxxx?xxxxx?xxxxx...
@@ -81,6 +83,13 @@ void ASLGameMode::OnfileReceiveComplete(FString& file, MessageType type)
 {
 	UMyBlueprintFunctionLibrary::CLogtofile(TEXT("OnfileReceiveComplete"));
 	UMyBlueprintFunctionLibrary::CLogtofile(*file);
+	FArchiveList archivelist;
+	FJsonObjectConverter::JsonObjectStringToUStruct<FArchiveList>(file, &archivelist, 0, 0);
+	for (auto var : archivelist.objectlist)
+	{
+		UStaticMesh * sm = LoadObject<UStaticMesh>(nullptr, *var.staticmeshpath);
+		spawnv1(var.location,var.rotator,var.scale, sm);
+	}
 
 }
 

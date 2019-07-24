@@ -16,6 +16,10 @@ void UUTcpCommunicatorv2::clientexit()
 	FMessagePackage messagepackage;
 	messagepackage.MT = MessageType::EXITGAME;
 	FJsonObjectConverter::UStructToJsonObjectString<FMessagePackage>(messagepackage, outstring);
+	if (UUTcpCommunicatorv2::mtcp == nullptr)
+	{
+		return;
+	}
 	UUTcpCommunicatorv2::mtcp->Send(outstring);
 	FPlatformProcess::Sleep(0.03);
 	UMyBlueprintFunctionLibrary::CLogtofile(FString("OnGameEndevent.Broadcast();"));

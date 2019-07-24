@@ -19,6 +19,10 @@ void UTcpCommunicatorv1::clientexit()
 	FMessagePackage messagepackage;
 	messagepackage.MT = MessageType::EXITGAME;
 	FJsonObjectConverter::UStructToJsonObjectString<FMessagePackage>(messagepackage, outstring);
+	if (UTcpCommunicatorv1::mtcp == nullptr)
+	{
+		return;
+	}
 	UTcpCommunicatorv1::mtcp->Send(outstring);
 	FPlatformProcess::Sleep(0.03);
 	UTcpCommunicatorv1::mtcp->exitthread = true;

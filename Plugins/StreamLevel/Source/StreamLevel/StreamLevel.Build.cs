@@ -38,9 +38,12 @@ public class StreamLevel : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
+                "Json",
+                "JsonUtilities",
                 "Utility",
                 "InputCore",
                 "TcpScenv1",
+                "ArchiveTool",
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);
