@@ -7,6 +7,8 @@
 #include "ArchiveToolFunctionLibrary.h"
 #include "JsonUtilities.h"
 #include "Json.h"
+#include "ShellActor.h"
+#include "StreamLevelPC.h"
 
 void ASLGameMode::SplitString(FString str)
 {//////?xxxxx?xxxxx?xxxxx...
@@ -87,8 +89,24 @@ void ASLGameMode::OnfileReceiveComplete(FString& file, MessageType type)
 	FJsonObjectConverter::JsonObjectStringToUStruct<FArchiveList>(file, &archivelist, 0, 0);
 	for (auto var : archivelist.objectlist)
 	{
-		UStaticMesh * sm = LoadObject<UStaticMesh>(nullptr, *var.staticmeshpath);
-		spawnv1(var.location,var.rotator,var.scale, sm);
+		FActorSpawnParameters ActorSpawnParams;
+		ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+		FTransform transform(var.rotator, var.location, var.scale);
+	    AShellActor *pactor = (AShellActor*)GetWorld()->SpawnActor<AActor>(AShellActor::StaticClass(),transform, ActorSpawnParams);
+		pactor->SetOwner(playercontroller);
+		pactor->mmeshpath = var.staticmeshpath;
+
+		//APlayerController* apc = GetWorld()->GetFirstPlayerController();
+		//check(apc);
+		//AStreamLevelPC* astlpc = Cast<AStreamLevelPC>(apc);
+		//check(astlpc);
+		//astlpc->actorarray.Add(pactor);
+
+
+		//pactor->SetSaticMesh(var.staticmeshpath);
+		//pactor->SetActorScale3D(var.scale);
+		//UStaticMesh * sm = LoadObject<UStaticMesh>(nullptr, *var.staticmeshpath);
+		//spawnv1(var.location,var.rotator,var.scale, sm);
 	}
 
 }
@@ -135,6 +153,8 @@ FString ASLGameMode::InitNewPlayer(APlayerController* NewPlayerController, const
 	tcpclient->ConnectServer();
 	FString params = strarray[0] + "?" + strarray[1];
 	tcpclient->GetMapActorInforfile(params);
+
+	playercontroller = NewPlayerController;
 ///////////////////////////////////////////////
 	return restr;
 }

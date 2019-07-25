@@ -20,6 +20,7 @@ class STREAMLEVEL_API ASLGameMode : public AGameMode
 	TArray<FString> strarray;
 	void SplitString(FString str);
 private:
+	APlayerController* playercontroller;
 	FName willloadlevelname;
 	int indexoflevel = 0;
 	void loadandunloadstreaminglevel(FName levelname);
