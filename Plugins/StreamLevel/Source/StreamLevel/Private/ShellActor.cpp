@@ -14,7 +14,8 @@ AShellActor::AShellActor()
 	bReplicateMovement = true;
 	bReplicates = true;
 	PlaneMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PlaneMesh0"));
-	PlaneMesh->SetupAttachment(RootComponent);
+	RootComponent = PlaneMesh;
+	//PlaneMesh->SetupAttachment(RootComponent);
 	PlaneMesh->SetMobility(EComponentMobility::Movable);
 	PlaneMesh->SetSimulatePhysics(true);
 	Tags.AddUnique("archive");
@@ -31,12 +32,15 @@ void AShellActor::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLi
 void AShellActor::BeginPlay()
 {
 	Super::BeginPlay();
+	//UStaticMesh * sm = LoadObject<UStaticMesh>(nullptr, *mmeshpath);
+	//USetSaticMesh(sm);
 	//FString path = "/Game/Geometry/Meshes/1M_Cube.1M_Cube";
 	//UStaticMesh * sm = LoadObject<UStaticMesh>(nullptr, *path);
 	//UStaticMesh * sm = LoadObject<UStaticMesh>(nullptr, *mmeshpath);
 	//SetSaticMesh(sm);
 	//SetSaticMesh(path);
-	GetWorld()->GetTimerManager().SetTimer(th, this, &AShellActor::thworker, 1, false, 1);
+
+	GetWorld()->GetTimerManager().SetTimer(th, this, &AShellActor::thworker, 1, false, 0.5);
 }
 void AShellActor::thworker()
 {
