@@ -101,12 +101,14 @@ void TcpClientv::ReceiveWork()
 			// and the time gap between two packages is needed and at least 30ms 
 			datareceive.Empty();
 			datareceive.AddUninitialized(datasize);
+			UMyBlueprintFunctionLibrary::CLogtofile(FString(" datasize：").Append(FString::FromInt(datasize)));
 			//Socket->Recv(&datareceive[(counter++) * 65536], datasize, bytes, ESocketReceiveFlags::None);
-			UMyBlueprintFunctionLibrary::CLogtofile(FString(UTF8_TO_TCHAR(&datareceive[0])).Left(datareceive.Num()));
+			//UMyBlueprintFunctionLibrary::CLogtofile(FString(UTF8_TO_TCHAR(&datareceive[0])).Left(datareceive.Num()));
 			Socket->Recv(&datareceive[0], datasize, bytes, ESocketReceiveFlags::None);
-			UMyBlueprintFunctionLibrary::CLogtofile(FString(UTF8_TO_TCHAR(&datareceive[0])).Left(datareceive.Num()));
+			//UMyBlueprintFunctionLibrary::CLogtofile(FString(UTF8_TO_TCHAR(&datareceive[0])).Left(datareceive.Num()));
 #ifdef UTF16
 			FString datatostring = FString(datareceive.Num() >> 1, (TCHAR*)&datareceive[0]);
+			UMyBlueprintFunctionLibrary::CLogtofile(datatostring);
 			//OnTcpClientReceiveddata.Broadcast(datareceive, FString(datareceive.Num() >> 1, (TCHAR*)&datareceive[0]));
 			OnTcpClientReceiveddata.Broadcast(datareceive, datatostring);
 			OnTcpClientReceiveddatav1.ExecuteIfBound(datareceive, datatostring);

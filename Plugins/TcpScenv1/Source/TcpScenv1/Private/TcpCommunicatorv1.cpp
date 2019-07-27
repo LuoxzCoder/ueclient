@@ -140,6 +140,7 @@ void UTcpCommunicatorv1::OnTcpResponse(const TArray<uint8>& p, const FString & s
 			FString outstring;
 			FJsonObjectConverter::UStructToJsonObjectString<FMessagePackage>(mp, outstring);
 			mtcp->Send(outstring);
+			UMyBlueprintFunctionLibrary::CLogtofile(TEXT("isfile = false;"));
 			return;
 		}
 		filestringpayload += str;
@@ -148,10 +149,12 @@ void UTcpCommunicatorv1::OnTcpResponse(const TArray<uint8>& p, const FString & s
 		FString outstring;
 		FJsonObjectConverter::UStructToJsonObjectString<FMessagePackage>(mp, outstring);
 		mtcp->Send(outstring);
+		UMyBlueprintFunctionLibrary::CLogtofile(TEXT("mp.MT = MessageType::CLIENT_FILE;//go on"));
 		return;
 	}
 	if (str.StartsWith(filestr) || str.StartsWith(filestrmobile))
 	{
+		UMyBlueprintFunctionLibrary::CLogtofile(TEXT("isfile = true"));
 		isfile = true;
 		return;
 	}
