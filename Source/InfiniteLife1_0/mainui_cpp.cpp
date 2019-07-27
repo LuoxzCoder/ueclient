@@ -17,7 +17,7 @@ void Umainui_cpp::NativeConstruct()
 {
 	UGameInstance* gameinstance = GetWorld()->GetGameInstance();
 	check(gameinstance);
-	UTcpGameInstance* tcpgameinstance = Cast<UTcpGameInstance>(gameinstance);
+	tcpgameinstance = Cast<UTcpGameInstance>(gameinstance);
 	check(tcpgameinstance);
 	tcpclient = tcpgameinstance->GetSignUpLoginClient();
 	check(tcpclient);
@@ -27,6 +27,5 @@ void Umainui_cpp::NativeConstruct()
 void Umainui_cpp::Onpressed_mButtonItem()
 {
 	FString str = UArchiveToolFunctionLibrary::ArchiveActorTransformbyTag(this, nullptr, "archive");
-
-	tcpclient->SendMapActorInforfile(str);
+	tcpclient->SendMapActorInforfile(tcpgameinstance->openmapname,str);
 }

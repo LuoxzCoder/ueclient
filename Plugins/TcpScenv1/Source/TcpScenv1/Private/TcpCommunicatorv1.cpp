@@ -99,12 +99,13 @@ void UTcpCommunicatorv1::Sendfile(FString &str)
 	}
 	isfilereceiveok = false;
 }
-void UTcpCommunicatorv1::SendMapActorInforfile(FString &str)
+void UTcpCommunicatorv1::SendMapActorInforfile(FString&mapname, FString &str)
 {
 	Sendfile(str);
 	FString outstring;
 	FMessagePackage messagepackage;
 	messagepackage.MT = MessageType::SAVEMAPACTORINFOR;
+	messagepackage.PayLoad = mapname;
 	FJsonObjectConverter::UStructToJsonObjectString<FMessagePackage>(messagepackage, outstring);
 	mtcp->Send(outstring);
 }

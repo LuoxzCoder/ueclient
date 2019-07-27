@@ -23,4 +23,5 @@ public:
 	UUTcpCommunicatorv2 * GetMatchClient();
 	FString username;
 	FString password;
+	FString openmapname;
 };

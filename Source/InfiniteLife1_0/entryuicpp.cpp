@@ -52,7 +52,7 @@ void Uentryuicpp::NativePreConstruct()
 		mButtonItem1->OnClicked.AddDynamic(this, &Uentryuicpp::Onpressed_mButtonItem1);
 	}
 	UGameInstance* gameinstance = GetWorld()->GetGameInstance();
-	UTcpGameInstance* tcpgameinstance = Cast<UTcpGameInstance>(gameinstance);
+	tcpgameinstance = Cast<UTcpGameInstance>(gameinstance);
 	check(tcpgameinstance);
 	matchclient = tcpgameinstance->GetMatchClient();
 	check(matchclient);
@@ -130,6 +130,8 @@ void Uentryuicpp::NativeTick(const FGeometry & MyGeometry, float InDeltaTime)
 void Uentryuicpp::Onpressed_mButtonItem()
 {
 	LevelShouldBeLoaded = "/Game/FirstPersonBP/Maps/FirstPersonExampleMap";
+	//tcpgameinstance->openmapname = "_Game_FirstPersonBP_Maps_FirstPersonExampleMap";//"FirstPersonExampleMap";
+	tcpgameinstance->openmapname = LevelShouldBeLoaded.Replace(TEXT("/"), TEXT("_"));// "ThirdPersonExampleMap";
 	check(matchclient);
 	matchclient->OpenServermap(LevelShouldBeLoaded);
 	//matchclient->mapname = LevelShouldBeLoaded;
@@ -174,6 +176,8 @@ void Uentryuicpp::Onpressed_mButtonItem()
 void Uentryuicpp::Onpressed_mButtonItem1()
 {
 	LevelShouldBeLoaded = "/Game/ThirdPersonBP/Maps/ThirdPersonExampleMap";
+	//tcpgameinstance->openmapname = "_Game_ThirdPersonBP_Maps_ThirdPersonExampleMap";// "ThirdPersonExampleMap";
+	tcpgameinstance->openmapname = LevelShouldBeLoaded.Replace(TEXT("/"), TEXT("_"));// "ThirdPersonExampleMap";
 	check(matchclient);
 	matchclient->OpenServermap(LevelShouldBeLoaded);
 	//matchclient->mapname = LevelShouldBeLoaded;

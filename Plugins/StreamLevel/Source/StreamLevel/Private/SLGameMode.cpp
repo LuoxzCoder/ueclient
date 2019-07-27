@@ -151,7 +151,7 @@ FString ASLGameMode::InitNewPlayer(APlayerController* NewPlayerController, const
 	check(tcpclient);
 	tcpclient->OnFileReceiveSucceed.AddDynamic(this, &ASLGameMode::OnfileReceiveComplete);
 	tcpclient->ConnectServer();
-	FString params = strarray[0] + "?" + strarray[1];
+	FString params = strarray[0].Replace(TEXT("/"), TEXT("_")) + "?" + strarray[1];
 	tcpclient->GetMapActorInforfile(params);
 
 	playercontroller = NewPlayerController;

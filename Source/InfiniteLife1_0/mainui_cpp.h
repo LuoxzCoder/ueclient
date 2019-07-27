@@ -14,6 +14,7 @@ UCLASS()
 class INFINITELIFE1_0_API Umainui_cpp : public UUserWidget
 {
 	GENERATED_BODY()
+	class UTcpGameInstance* tcpgameinstance;
 	class UTcpCommunicatorv1* tcpclient;
 public:
 	virtual void NativePreConstruct()override;

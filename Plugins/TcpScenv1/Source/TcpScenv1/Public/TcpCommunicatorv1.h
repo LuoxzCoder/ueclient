@@ -73,7 +73,7 @@ public:
 	bool ConnectServer();
 	void SignUp(FString username, FString password);
 	void LogIn(FString username, FString password);
-	void SendMapActorInforfile(FString &filecontent);
+	void SendMapActorInforfile(FString&mapname,FString &filecontent);
 	void GetMapActorInforfile(FString& mapname);
 
 	UPROPERTY()
