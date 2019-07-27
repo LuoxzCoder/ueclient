@@ -32,9 +32,9 @@ void UUTcpCommunicatorv2::init()
 	UGameInstance* gameinstance = world->GetGameInstance();
 	tcpgameinstance = Cast<UTcpGameInstance>(gameinstance);
 	check(tcpgameinstance);
-	tcpclient = tcpgameinstance->GetSignUpLoginClient();
-	check(tcpclient);
-	tcpclient->OnFileReceiveSucceed.AddDynamic(this, &UUTcpCommunicatorv2::onfilereceivesucceed);
+	//tcpclient = tcpgameinstance->GetSignUpLoginClient();
+	//check(tcpclient);
+	//tcpclient->OnFileReceiveSucceed.AddDynamic(this, &UUTcpCommunicatorv2::onfilereceivesucceed);
 }
 void UUTcpCommunicatorv2::OnTcpResponse(const TArray<uint8>&p, const FString & str)
 {
@@ -49,20 +49,24 @@ void UUTcpCommunicatorv2::OnTcpResponse(const TArray<uint8>&p, const FString & s
 		pld.Append(param);
 		UGameplayStatics::OpenLevel(world, *pld);
 		//UGameplayStatics::OpenLevel(GetWorld(), "192.168.1.240:7788");
+		FString outstring;
+		mp.MT = MessageType::EntryMAPOK;
+		FJsonObjectConverter::UStructToJsonObjectString<FMessagePackage>(mp, outstring);
+		mtcp->Send(outstring);
 	}
 }
-void UUTcpCommunicatorv2::onfilereceivesucceed(FString &filecontent, MessageType type)
-{
-	//type :mean file type;
-	this->filecontent = filecontent;
-	OpenServermap(mapname);
-	//UMyBlueprintFunctionLibrary::CLogtofile(FString("onfilereceivesucceed();"));
-
-}
-void UUTcpCommunicatorv2::OpenServermap(FString name)
+//void UUTcpCommunicatorv2::onfilereceivesucceed(FString &filecontent, MessageType type)
+//{
+//	//type :mean file type;
+//	this->filecontent = filecontent;
+//	OpenServermap(mapname);
+//	//UMyBlueprintFunctionLibrary::CLogtofile(FString("onfilereceivesucceed();"));
+//
+//}
+void UUTcpCommunicatorv2::OpenServermap(FString mapname, FString mapID, FString nvn)
 {
 	FMessagePackage messagepackage(MessageType::MATCH, FString("hi"));
-	LevelShouldBeLoaded = name;
+	LevelShouldBeLoaded = mapname;
 	if (mtcp)
 	{	
 		FString outstring;
@@ -78,16 +82,16 @@ void UUTcpCommunicatorv2::OpenServermap(FString name)
 
 		FString outstring;
 		messagepackage.MT = MessageType::MATCH;
-		messagepackage.PayLoad = LevelShouldBeLoaded;
+		messagepackage.PayLoad = LevelShouldBeLoaded+"?"+mapID+"?"+nvn;
 		FJsonObjectConverter::UStructToJsonObjectString<FMessagePackage>(messagepackage, outstring);
 		mtcp->Connecttoserver(192, 168, 1, 240, 8001);
 		mtcp->OnTcpClientReceiveddata.AddDynamic(this, &UUTcpCommunicatorv2::OnTcpResponse);
 		mtcp->Send(outstring);
 		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, *outstring);
 }
-FString UUTcpCommunicatorv2::GetMapArchiveInfor(FString name)
-{
-	check(tcpclient);
-	tcpclient->GetMapActorInforfile(name);
-	return "";
-}
+//FString UUTcpCommunicatorv2::GetMapArchiveInfor(FString name)
+//{
+//	check(tcpclient);
+//	tcpclient->GetMapActorInforfile(name);
+//	return "";
+//}

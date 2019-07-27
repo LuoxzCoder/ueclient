@@ -16,9 +16,10 @@ class INFINITELIFE1_0_API Uentryuicpp : public UUserWidget
 {
 	GENERATED_BODY()
 	class UUTcpCommunicatorv2* matchclient;
-	FString LevelShouldBeLoaded;
 	class UTcpGameInstance* tcpgameinstance;
-
+	FString LevelShouldBeLoaded;
+	FString mapID;
+	FString nvn="3";
 
 	//bool isfilegoing=false;
 	//FString st;

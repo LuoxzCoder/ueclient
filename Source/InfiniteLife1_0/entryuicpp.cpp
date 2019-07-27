@@ -133,7 +133,7 @@ void Uentryuicpp::Onpressed_mButtonItem()
 	//tcpgameinstance->openmapname = "_Game_FirstPersonBP_Maps_FirstPersonExampleMap";//"FirstPersonExampleMap";
 	tcpgameinstance->openmapname = LevelShouldBeLoaded.Replace(TEXT("/"), TEXT("_"));// "ThirdPersonExampleMap";
 	check(matchclient);
-	matchclient->OpenServermap(LevelShouldBeLoaded);
+	matchclient->OpenServermap(LevelShouldBeLoaded,mapID,nvn);
 	//matchclient->mapname = LevelShouldBeLoaded;
 	//matchclient->GetMapArchiveInfor(LevelShouldBeLoaded);
 	//loading special effects
@@ -179,7 +179,8 @@ void Uentryuicpp::Onpressed_mButtonItem1()
 	//tcpgameinstance->openmapname = "_Game_ThirdPersonBP_Maps_ThirdPersonExampleMap";// "ThirdPersonExampleMap";
 	tcpgameinstance->openmapname = LevelShouldBeLoaded.Replace(TEXT("/"), TEXT("_"));// "ThirdPersonExampleMap";
 	check(matchclient);
-	matchclient->OpenServermap(LevelShouldBeLoaded);
+	matchclient->OpenServermap(LevelShouldBeLoaded, mapID, nvn);
+
 	//matchclient->mapname = LevelShouldBeLoaded;
 	//matchclient->GetMapArchiveInfor(LevelShouldBeLoaded);
 	//loading special effects
