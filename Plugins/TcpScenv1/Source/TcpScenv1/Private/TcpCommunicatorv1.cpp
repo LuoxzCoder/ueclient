@@ -78,7 +78,11 @@ void UTcpCommunicatorv1::Sendfile(FString &str)
 	messagepackage.MT = MessageType::FILE;
 	FJsonObjectConverter::UStructToJsonObjectString<FMessagePackage>(messagepackage, outstring);
 	mtcp->Send(outstring);
-	FPlatformProcess::Sleep(0.05);
+	while (!isfilegoing)
+	{
+		FPlatformProcess::Sleep(0.01);
+	}
+	isfilegoing = false;
 	FString strpersistent;
 	do {
 		FString file_str = str.Len() > 32768 ? str.Left(32768) : str;//string should be encode by unicode
