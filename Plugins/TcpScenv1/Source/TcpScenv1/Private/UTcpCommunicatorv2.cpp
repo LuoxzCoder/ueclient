@@ -63,10 +63,10 @@ void UUTcpCommunicatorv2::OnTcpResponse(const TArray<uint8>&p, const FString & s
 //	//UMyBlueprintFunctionLibrary::CLogtofile(FString("onfilereceivesucceed();"));
 //
 //}
-void UUTcpCommunicatorv2::OpenServermap(FString mapname, FString mapID, FString nvn)
+void UUTcpCommunicatorv2::OpenServermap(FString pmapname, FString mapID, FString nvn)
 {
 	FMessagePackage messagepackage(MessageType::MATCH, FString("hi"));
-	LevelShouldBeLoaded = mapname;
+	LevelShouldBeLoaded = pmapname;
 	if (mtcp)
 	{	
 		FString outstring;

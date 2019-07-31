@@ -11,6 +11,25 @@
 TcpClientv::TcpClientv()
 {
 	Socket = ISocketSubsystem::Get()->CreateSocket(NAME_Stream, TEXT("default"), false);
+	int newsize;
+	bool b = Socket->SetSendBufferSize(TCPSENDBUFFERSIZE, newsize);
+	if (b)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString("sendbuffersize  for this os ok "));
+	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString("sendbuffersize  for this os failed "));
+	}
+	b = Socket->SetReceiveBufferSize(65536,newsize);
+	if (b)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString("Receivebuffersize  for this os ok "));
+	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString("Receivebuffersize  for this os failed "));
+	}
 }
 
 TcpClientv::~TcpClientv()

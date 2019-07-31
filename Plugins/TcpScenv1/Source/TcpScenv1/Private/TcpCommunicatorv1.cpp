@@ -71,6 +71,7 @@ void UTcpCommunicatorv1::LogIn(FString username, FString password)
 	FJsonObjectConverter::UStructToJsonObjectString<FMessagePackage>(messagepackage, outstring);
 	mtcp->Send(outstring);
 }
+#define CHUNCKSIZE TCPSENDBUFFERSIZE/2
 void UTcpCommunicatorv1::Sendfile(FString &str)
 {
 	FString outstring;
@@ -80,17 +81,17 @@ void UTcpCommunicatorv1::Sendfile(FString &str)
 	mtcp->Send(outstring);
 	while (!isfilegoing)
 	{
-		FPlatformProcess::Sleep(0.01);
+		FPlatformProcess::Sleep(0.03);
 	}
 	isfilegoing = false;
 	FString strpersistent;
 	do {
-		FString file_str = str.Len() > 32768 ? str.Left(32768) : str;//string should be encode by unicode
+		FString file_str = str.Len() > CHUNCKSIZE ? str.Left(CHUNCKSIZE) : str;//string should be encode by unicode
 		mtcp->Send(file_str);
-		str = str.RightChop(32768);
+		str = str.RightChop(CHUNCKSIZE);
 		while (!isfilegoing)
 		{
-			FPlatformProcess::Sleep(0.01);
+			FPlatformProcess::Sleep(0.03);
 		}
 		isfilegoing = false;
 	} while (!str.IsEmpty());
@@ -99,19 +100,33 @@ void UTcpCommunicatorv1::Sendfile(FString &str)
 	mtcp->Send(outstring);
 	while (!isfilereceiveok)
 	{
-		FPlatformProcess::Sleep(0.01);
+		FPlatformProcess::Sleep(0.03);
 	}
 	isfilereceiveok = false;
 }
-void UTcpCommunicatorv1::SendMapActorInforfile(FString&mapname, FString &str)
+void UTcpCommunicatorv1::Sendfilethread()
 {
-	Sendfile(str);
+	Sendfile(stringtosend);
 	FString outstring;
 	FMessagePackage messagepackage;
-	messagepackage.MT = MessageType::SAVEMAPACTORINFOR;
-	messagepackage.PayLoad = mapname;
+	messagepackage.MT = m_filetype;
+	messagepackage.PayLoad = m_mapname;
 	FJsonObjectConverter::UStructToJsonObjectString<FMessagePackage>(messagepackage, outstring);
 	mtcp->Send(outstring);
+}
+void UTcpCommunicatorv1::SendMapActorInforfile(FString&mapname, FString &str)
+{
+	stringtosend = str;
+	m_filetype = MessageType::SAVEMAPACTORINFOR;
+	m_mapname = mapname;
+	Async<void>(EAsyncExecution::ThreadPool, [=]() {Sendfilethread(); }, nullptr);
+	//Sendfile(str);
+	//FString outstring;
+	//FMessagePackage messagepackage;
+	//messagepackage.MT = MessageType::SAVEMAPACTORINFOR;
+	//messagepackage.PayLoad = mapname;
+	//FJsonObjectConverter::UStructToJsonObjectString<FMessagePackage>(messagepackage, outstring);
+	//mtcp->Send(outstring);
 }
 
 void UTcpCommunicatorv1::GetMapActorInforfile(FString & mapname)

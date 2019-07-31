@@ -1,7 +1,6 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
-
 #include "CoreMinimal.h"
 #include "Runtime/Engine/Classes/Engine/EngineTypes.h"
 #include "UObject/NoExportTypes.h"
@@ -68,6 +67,10 @@ private:
 	bool isconnected = false;
 	int OnTcpResponsestate = 0;
 	void Sendfile(FString &filecontent);
+	void Sendfilethread();
+	FString stringtosend;
+	MessageType m_filetype;
+	FString m_mapname;
 public:
 	class UWorld* world;
 	bool ConnectServer();
