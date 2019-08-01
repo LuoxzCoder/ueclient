@@ -49,10 +49,10 @@ void UUTcpCommunicatorv2::OnTcpResponse(const TArray<uint8>&p, const FString & s
 		pld.Append(param);
 		UGameplayStatics::OpenLevel(world, *pld);
 		//UGameplayStatics::OpenLevel(GetWorld(), "192.168.1.240:7788");
-		FString outstring;
-		mp.MT = MessageType::EntryMAPOK;
-		FJsonObjectConverter::UStructToJsonObjectString<FMessagePackage>(mp, outstring);
-		mtcp->Send(outstring);
+		//FString outstring;
+		//mp.MT = MessageType::EntryMAPOK;
+		//FJsonObjectConverter::UStructToJsonObjectString<FMessagePackage>(mp, outstring);
+		//mtcp->Send(outstring);
 	}
 }
 //void UUTcpCommunicatorv2::onfilereceivesucceed(FString &filecontent, MessageType type)
@@ -88,6 +88,14 @@ void UUTcpCommunicatorv2::OpenServermap(FString pmapname, FString mapID, FString
 		mtcp->OnTcpClientReceiveddata.AddDynamic(this, &UUTcpCommunicatorv2::OnTcpResponse);
 		mtcp->Send(outstring);
 		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, *outstring);
+}
+void UUTcpCommunicatorv2::EntyMapOkMessage()
+{
+	FMessagePackage mp;
+	FString outstring;
+	mp.MT = MessageType::EntryMAPOK;
+	FJsonObjectConverter::UStructToJsonObjectString<FMessagePackage>(mp, outstring);
+	mtcp->Send(outstring);
 }
 //FString UUTcpCommunicatorv2::GetMapArchiveInfor(FString name)
 //{

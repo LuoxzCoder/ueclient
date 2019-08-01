@@ -28,6 +28,7 @@ public:
 	class UWorld* world;
 	void init();
 	void OpenServermap(FString mapname,FString mapID,FString nvn);
+	void EntyMapOkMessage();
 	//FString GetMapArchiveInfor(FString mapname);
 private:
 	//UFUNCTION()
