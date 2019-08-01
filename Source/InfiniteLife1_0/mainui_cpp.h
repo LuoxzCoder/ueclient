@@ -14,6 +14,7 @@ UCLASS()
 class INFINITELIFE1_0_API Umainui_cpp : public UUserWidget
 {
 	GENERATED_BODY()
+	FString url = "192.168.1.240:8002";
 	class UTcpGameInstance* tcpgameinstance;
 	class UTcpCommunicatorv1* tcpclient;
 public:

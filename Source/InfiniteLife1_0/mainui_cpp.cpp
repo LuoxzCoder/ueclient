@@ -5,6 +5,7 @@
 #include "UTcpCommunicatorv2.h"
 #include "TcpGameInstance.h"
 #include "ArchiveToolFunctionLibrary.h"
+#include "HttpServicev.h"
 void Umainui_cpp::NativePreConstruct()
 {
 	if (mButtonItem)
@@ -27,5 +28,7 @@ void Umainui_cpp::NativeConstruct()
 void Umainui_cpp::Onpressed_mButtonItem()
 {
 	FString str = UArchiveToolFunctionLibrary::ArchiveActorTransformbyTag(this, nullptr, "archive");
-	tcpclient->SendMapActorInforfile(tcpgameinstance->openmapname,str);
+	UHttpServicev::GetANewInstance()->HttpPost(url,tcpgameinstance->username, tcpgameinstance->password, tcpgameinstance->openmapname,str);
+	//tcpclient->SendMapActorInforfile(tcpgameinstance->openmapname,str);
+
 }

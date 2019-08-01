@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "HttpServicev.h"
 #include "Engine.h"
@@ -35,8 +35,37 @@ void UHttpServicev::HttpGet(FString uri)
 	Request->OnRequestProgress().BindUObject(this,&UHttpServicev::HttpResponseProgress);
 	Request->ProcessRequest();
 }
+void UHttpServicev::HttpPost(FString uri, FString username, FString password, FString payload, FString content)
+{
+	TSharedRef<IHttpRequest> Request = Http->CreateRequest();
+	Request->SetURL(uri);
+	SetRequestHeaders(Request);
+	Request->SetHeader(TEXT("UserName"), username);
+	Request->SetHeader(TEXT("Password"), password);
+	Request->SetHeader(TEXT("Palyload"), payload);
+	Request->SetVerb("POST");
+	Request->SetContentAsString(content);
+	Request->OnProcessRequestComplete().BindUObject(this, &UHttpServicev::HttpResponseComplete);
+	Request->OnRequestProgress().BindUObject(this, &UHttpServicev::HttpResponseProgress);
+	Request->ProcessRequest();
+}
+void UHttpServicev::HttpPost(FString uri, FString username, FString password, FString payload, TArray<uint8>& content)
+{
+	TSharedRef<IHttpRequest> Request = Http->CreateRequest();
+	Request->SetURL(uri);
+	SetRequestHeaders(Request);
+	Request->SetHeader(TEXT("UserName"), username);
+	Request->SetHeader(TEXT("Password"), password); 
+	Request->SetHeader(TEXT("Palyload"), payload);
+	Request->SetVerb("POST");
+	Request->SetContent(content);
+	Request->OnProcessRequestComplete().BindUObject(this, &UHttpServicev::HttpResponseComplete);
+	Request->OnRequestProgress().BindUObject(this, &UHttpServicev::HttpResponseProgress);
+	Request->ProcessRequest();
+}
 void UHttpServicev::HttpResponseComplete(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
 {
+	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow,TEXT("HttpResponseComplete"));
 	if (!ResponseIsValid(Response, bWasSuccessful))
 	{
 		OnHtpResponseFailed.Broadcast();
@@ -46,8 +75,8 @@ void UHttpServicev::HttpResponseComplete(FHttpRequestPtr Request, FHttpResponseP
 }
 void UHttpServicev::HttpResponseProgress(FHttpRequestPtr Resquest, int32 a, int32 b)
 {
-	////GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::FromInt(b).Append(FString(": b")));
-	////GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::FromInt(a).Append(FString(": a")));
+	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::FromInt(b).Append(FString(": b")));
+	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::FromInt(a).Append(FString(": a")));
 	float percent = (1000.0 * b) / 730130476;
 
 //	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::FromInt(percent).Append(FString(": percent")));
