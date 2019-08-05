@@ -12,7 +12,7 @@ enum class MessageType : uint8
 	FILEEND,//changless
 	CLIENT_FILE,
 	CLIENT_FILEEND,
-	CLIENT_FILERECEIVEOK,//client side receive ok
+	CLIENT_FILERECEIVEOK,
 	SINGUP,
 	LOGIN,
 	MATCH,
@@ -21,6 +21,7 @@ enum class MessageType : uint8
 	MAPACTORINFORSENDOK,
 	EntryMAP,
 	EntryMAPOK,
+	MAPISFULL,//the number in the map has reach the ceilling
 	EXITGAME,
 	FILERECEIVEOK,//server side receive ok
 

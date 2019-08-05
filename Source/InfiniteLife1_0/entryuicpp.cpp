@@ -51,16 +51,16 @@ void Uentryuicpp::NativePreConstruct()
 	{
 		mButtonItem1->OnClicked.AddDynamic(this, &Uentryuicpp::Onpressed_mButtonItem1);
 	}
+}
+void Uentryuicpp::NativeConstruct()
+{
 	UGameInstance* gameinstance = GetWorld()->GetGameInstance();
+	check(gameinstance);
 	tcpgameinstance = Cast<UTcpGameInstance>(gameinstance);
 	check(tcpgameinstance);
 	matchclient = tcpgameinstance->GetMatchClient();
 	check(matchclient);
 	matchclient->init();
-}
-void Uentryuicpp::NativeConstruct()
-{
-
 	//FString teststr = "hithisastring";
 	//FString t1 = teststr.RightChop(10);
 	//FString t2 = teststr.RightChop(13);
@@ -133,6 +133,8 @@ void Uentryuicpp::Onpressed_mButtonItem()
 	//tcpgameinstance->openmapname = "_Game_FirstPersonBP_Maps_FirstPersonExampleMap";//"FirstPersonExampleMap";
 	tcpgameinstance->openmapname = LevelShouldBeLoaded.Replace(TEXT("/"), TEXT("_"));// "ThirdPersonExampleMap";
 	check(matchclient);
+	check(mEditablebox);
+	mapID = mEditablebox->GetText().ToString();
 	matchclient->OpenServermap(LevelShouldBeLoaded,mapID,nvn);
 	//matchclient->mapname = LevelShouldBeLoaded;
 	//matchclient->GetMapArchiveInfor(LevelShouldBeLoaded);

@@ -45,6 +45,8 @@ public:
 		UButton* mButtonItem;
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 		UButton* mButtonItem1;
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+		UEditableTextBox* mEditablebox;
 private:
 	UFUNCTION()
 		void Onpressed_mButtonItem();

@@ -54,6 +54,10 @@ void UUTcpCommunicatorv2::OnTcpResponse(const TArray<uint8>&p, const FString & s
 		//FJsonObjectConverter::UStructToJsonObjectString<FMessagePackage>(mp, outstring);
 		//mtcp->Send(outstring);
 	}
+	else if (mp.MT == MessageType::MAPISFULL)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, TEXT("the number of people in the map has reach the ceilling"));
+	}
 }
 //void UUTcpCommunicatorv2::onfilereceivesucceed(FString &filecontent, MessageType type)
 //{
